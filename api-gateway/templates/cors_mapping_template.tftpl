@@ -1,0 +1,5 @@
+#set($origin = $input.params().header.get('origin'))
+
+#if ($origin.matches("${origin_regex}"))
+    #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin)
+#end
