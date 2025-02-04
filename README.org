@@ -1,0 +1,12 @@
+#+STARTUP: indent hidestars fninline align noinlineimages
+#+OPTIONS: tex:t author:nil toc:nil H:4
+#+OPTIONS: ^:nil ^:{}
+#+EXCLUDE_TAGS: noexport
+#+LINK_UP:
+#+LINK_HOME:
+
+#+TITLE: terraform-modules
+#+AUTHOR:
+#+DATE:
+
+#+LATEX: \tableofcontents\clearpage
