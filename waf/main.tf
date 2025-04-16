@@ -1,16 +1,57 @@
+resource "aws_wafv2_ip_set" "this" {
+  count = var.enable_allow_ips_rule ? 1 : 0
+
+  name               = "${var.name_prefix}-is"
+  scope              = var.scope
+  ip_address_version = "IPV4"
+  addresses          = var.allow_ip_addresses
+}
+
 resource "aws_wafv2_web_acl" "this" {
   name  = "${var.name_prefix}-acl"
   scope = var.scope
 
   default_action {
-    allow {}
+    dynamic "allow" {
+      for_each = var.default_action == "allow" ? [1] : []
+      content {}
+    }
+    dynamic "block" {
+      for_each = var.default_action == "block" ? [1] : []
+      content {}
+    }
+  }
+
+  dynamic "rule" {
+    for_each = var.enable_allow_ips_rule ? [1] : []
+
+    content {
+      name     = "AllowIPsRule"
+      priority = 20
+
+      action {
+        allow {}
+      }
+
+      statement {
+        ip_set_reference_statement {
+          arn = aws_wafv2_ip_set.this[0].arn
+        }
+      }
+
+      visibility_config {
+        sampled_requests_enabled   = false
+        cloudwatch_metrics_enabled = false
+        metric_name                = "allow-ips-rule-metric"
+      }
+    }
   }
 
   dynamic "rule" {
     for_each = var.managed_rules
 
     content {
-      name = rule.value.name
+      name     = rule.value.name
       priority = rule.value.priority
 
       override_action {
@@ -19,7 +60,7 @@ resource "aws_wafv2_web_acl" "this" {
 
       statement {
         managed_rule_group_statement {
-          name = rule.value.name
+          name        = rule.value.name
           vendor_name = "AWS"
 
           dynamic "rule_action_override" {
@@ -56,8 +97,8 @@ resource "aws_wafv2_web_acl" "this" {
 
       visibility_config {
         cloudwatch_metrics_enabled = rule.value.cloudwatch_metrics_enabled
-        metric_name = "${rule.key}-metric"
-        sampled_requests_enabled = rule.value.sampled_requests_enabled
+        metric_name                = "${rule.key}-metric"
+        sampled_requests_enabled   = rule.value.sampled_requests_enabled
       }
     }
   }
