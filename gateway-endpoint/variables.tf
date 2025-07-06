@@ -17,6 +17,6 @@ variable "route_table_ids" {
 
 variable "tags" {
   type     = map(string)
-  nullable = true
-  default  = null
+  nullable = false
+  default  = {}
 }
