@@ -14,7 +14,7 @@ variable "endpoints" {
     secrets_manager_arn             = optional(string)
     username                        = optional(string)
     password                        = optional(string)
-    port                            = optional(number, 3306)
+    port                            = optional(number)
     extra_connection_attributes     = optional(string)
     certificate_arn                 = optional(string)
     ssl_mode                        = optional(string, "none")
