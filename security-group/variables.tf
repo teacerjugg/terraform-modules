@@ -1,6 +1,16 @@
+variable "tags" {
+  type    = map(string)
+  default = {}
+}
+
 variable "name_prefix" {
   type     = string
   nullable = false
+}
+
+variable "description" {
+  type    = string
+  default = "Managed by Terraform"
 }
 
 variable "vpc_id" {
