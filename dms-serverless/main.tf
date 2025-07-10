@@ -85,6 +85,18 @@ resource "aws_dms_endpoint" "this" {
   ssl_mode        = each.value.ssl_mode
 }
 
+resource "terraform_data" "endpoint_setting" {
+  for_each = { for k, v in var.endpoints : k => v if v.extra_options != null }
+
+  triggers_replace = [
+    aws_dms_endpoint.this[each.key].endpoint_arn,
+  ]
+
+  provisioner "local-exec" {
+    command = "aws dms modify-endpoint --endpoint-arn ${aws_dms_endpoint.this[each.key].endpoint_arn} ${each.value.extra_options}"
+  }
+}
+
 ##################################################################################
 # Replication Config (For Serverless)
 ##################################################################################

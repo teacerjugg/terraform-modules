@@ -23,6 +23,10 @@ variable "endpoints" {
     extra_connection_attributes     = optional(string)
     certificate_arn                 = optional(string)
     ssl_mode                        = optional(string, "none")
+    # プロバイダが対応していないオプションを設定する
+    # e.g., "--my-sql-settings '{"ServerTimezone": "Asia/Tokyo"}'"
+    # SEE: https://docs.aws.amazon.com/cli/latest/reference/dms/modify-endpoint.html
+    extra_options = optional(string)
   }))
   default = {}
 }
