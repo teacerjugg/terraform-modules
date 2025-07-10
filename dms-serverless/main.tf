@@ -1,36 +1,47 @@
 ##################################################################################
 # IAM Role
 # SEE: https://docs.aws.amazon.com/dms/latest/userguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonDMSVPCManagementRole
-# WARNING: アカウントに1つあればいいようなので外出しした方がいいかも
 ##################################################################################
 
 resource "aws_iam_role" "dms_access_for_endpoint" {
+  count = var.create_iam_roles ? 1 : 0
+
   name               = "dms-access-for-endpoint"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
 resource "aws_iam_role_policy_attachment" "dms_access_for_endpoint" {
-  role       = aws_iam_role.dms_access_for_endpoint.name
+  count = var.create_iam_roles ? 1 : 0
+
+  role       = aws_iam_role.dms_access_for_endpoint[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonDMSRedshiftS3Role"
 }
 
 resource "aws_iam_role" "dms_cloudwatch_logs_role" {
+  count = var.create_iam_roles ? 1 : 0
+
   name               = "dms-cloudwatch-logs-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
 resource "aws_iam_role_policy_attachment" "dms_cloudwatch_logs_role" {
-  role       = aws_iam_role.dms_cloudwatch_logs_role.name
+  count = var.create_iam_roles ? 1 : 0
+
+  role       = aws_iam_role.dms_cloudwatch_logs_role[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonDMSCloudWatchLogsRole"
 }
 
 resource "aws_iam_role" "dms_vpc_role" {
+  count = var.create_iam_roles ? 1 : 0
+
   name               = "dms-vpc-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
 resource "aws_iam_role_policy_attachment" "dms_vpc_role" {
-  role       = aws_iam_role.dms_vpc_role.name
+  count = var.create_iam_roles ? 1 : 0
+
+  role       = aws_iam_role.dms_vpc_role[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole"
 }
 

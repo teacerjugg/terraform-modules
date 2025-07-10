@@ -3,6 +3,11 @@ variable "name_prefix" {
   nullable = false
 }
 
+variable "create_iam_roles" {
+  type    = bool
+  default = true
+}
+
 variable "endpoints" {
   type = map(object({
     endpoint_id                     = string
